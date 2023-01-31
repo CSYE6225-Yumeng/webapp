@@ -31,6 +31,12 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date accountUpdated;
 
+    private boolean enabled;
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public long getId() {
         return id;
     }

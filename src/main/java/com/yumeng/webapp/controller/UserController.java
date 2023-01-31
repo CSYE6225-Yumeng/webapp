@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 public class UserController {
 
@@ -40,7 +42,7 @@ public class UserController {
     @GetMapping(
             value = "/v1/user/{userId}",
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUser(@RequestBody User user, @PathVariable long userId) {
+    public ResponseEntity getUser(@PathVariable long userId, Principal principal) {
         User gUser = userRepository.getUsers(userId);
         return ResponseEntity.status(HttpStatus.OK).body(gUser);
     }
