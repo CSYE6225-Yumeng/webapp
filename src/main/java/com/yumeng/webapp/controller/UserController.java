@@ -3,6 +3,7 @@ package com.yumeng.webapp.controller;
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.UserRepository;
 import org.postgresql.util.PSQLException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
+
+//    @Autowired
+//    private JdbcUserDetailsManager userDetailsManager;
     private UserRepository userRepository;
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -23,6 +27,7 @@ public class UserController {
         if (user.emailValidation()){
             try {
                 User cUser = userRepository.createUser(user);
+//                userDetailsManager.createUser(new SecureUser(cUser));
                 return ResponseEntity.status(HttpStatus.CREATED).body(cUser);
             }catch (Exception e){
                 return ResponseEntity.badRequest().build();
