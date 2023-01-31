@@ -2,6 +2,7 @@ package com.yumeng.webapp.controller;
 
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.UserRepository;
+import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,16 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User user) {
-        User cUser = userRepository.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cUser);
+        if (user.emailValidation()){
+            try {
+                User cUser = userRepository.createUser(user);
+                return ResponseEntity.status(HttpStatus.CREATED).body(cUser);
+            }catch (Exception e){
+                return ResponseEntity.badRequest().build();
+            }
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping(
@@ -36,8 +45,25 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity updateUser(@RequestBody User user, @PathVariable long userId) {
-        User newUser = userRepository.updateUsers(userId, user);
-        return ResponseEntity.noContent().build();
+        if(user.getUsername() != null){
+            if (user.emailValidation()){
+                try {
+                    User newUser = userRepository.updateUsers(userId, user);
+                    return ResponseEntity.noContent().build();
+                }catch (PSQLException e){
+                    return ResponseEntity.badRequest().build();
+                }
+            }else{
+                return ResponseEntity.badRequest().build();
+            }
+        }else{
+            try {
+                User newUser = userRepository.updateUsers(userId, user);
+                return ResponseEntity.noContent().build();
+            }catch (Exception e){
+                return ResponseEntity.badRequest().build();
+            }
+        }
 //        return ResponseEntity.badRequest().build();
 //        return ResponseEntity.unauthorized().build();
         //return ResponseEntity.Forbidden().build();
