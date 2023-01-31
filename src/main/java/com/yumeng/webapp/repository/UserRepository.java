@@ -2,7 +2,9 @@ package com.yumeng.webapp.repository;
 
 import com.yumeng.webapp.dao.UserDao;
 import com.yumeng.webapp.data.User;
+import com.yumeng.webapp.util.HashUtil;
 import org.jdbi.v3.core.Jdbi;
+import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +17,8 @@ public class UserRepository  {
         this.jdbi = jdbi;
     }
 
-    public User createUser(User user){
+    public User createUser(User user) throws PSQLException {
+        user.setPassword(HashUtil.getHash(user.getPassword()));
         return jdbi.withExtension(UserDao.class, dao -> dao.createUser(user));
     }
 
@@ -23,7 +26,7 @@ public class UserRepository  {
         return jdbi.withExtension(UserDao.class, dao -> dao.getUser(id));
     }
 
-    public User updateUsers(Long id, User userNew){
+    public User updateUsers(Long id, User userNew) throws PSQLException{
         User userOld = getUsers(id);
         if(userNew.getFirstName() == null){
             userNew.setFirstName(userOld.getFirstName());

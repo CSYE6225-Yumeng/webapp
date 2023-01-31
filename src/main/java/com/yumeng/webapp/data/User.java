@@ -2,11 +2,15 @@ package com.yumeng.webapp.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.validator.routines.EmailValidator;
+
+
 
 import java.util.Date;
 
 
 public class User {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
     @JsonProperty("first_name")
@@ -17,7 +21,9 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String username;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date accountCreated;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date accountUpdated;
 
     public long getId() {
@@ -62,6 +68,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean emailValidation() {
+        if(this.username == null){
+            return true;
+        }
+        EmailValidator validator = EmailValidator.getInstance();
+        return validator.isValid(this.username);
     }
 
     public void setUsername(String username) {
