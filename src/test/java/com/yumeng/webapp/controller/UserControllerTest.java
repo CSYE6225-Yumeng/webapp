@@ -1,5 +1,6 @@
 package com.yumeng.webapp.controller;
 
+import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +57,7 @@ class UserControllerTest {
         testUser.setUsername("45637899");
         ResponseEntity actualUser = testUserController.createUser(testUser);
         assertEquals(HttpStatus.BAD_REQUEST, actualUser.getStatusCode());
-        assertEquals("invaild username(invaild email-address)!", actualUser.getBody());
+        assertEquals("invaild username(invaild email-address)!", ((ErrorInfo) actualUser.getBody()).getErrorMessage());
     }
 
     @Test
@@ -65,7 +66,7 @@ class UserControllerTest {
         when(testUserRepository.createUser(testUser)).thenThrow(sameUsername);
         ResponseEntity actualUser = testUserController.createUser(testUser);
         assertEquals(HttpStatus.BAD_REQUEST, actualUser.getStatusCode());
-        assertEquals("same username!", actualUser.getBody());
+        assertEquals("same username!", ((ErrorInfo) actualUser.getBody()).getErrorMessage());
     }
 
     @Test
