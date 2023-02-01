@@ -19,7 +19,9 @@ public class UserRepository  {
 
     public User createUser(User user) throws PSQLException {
         user.setPassword(HashUtil.getHash(user.getPassword()));
-        return jdbi.withExtension(UserDao.class, dao -> dao.createUser(user));
+        User newUser = jdbi.withExtension(UserDao.class, dao -> dao.createUser(user));
+        String authId = jdbi.withExtension(UserDao.class, dao -> dao.createAuth(newUser));
+        return newUser;
     }
 
     public User getUsers(Long id){
