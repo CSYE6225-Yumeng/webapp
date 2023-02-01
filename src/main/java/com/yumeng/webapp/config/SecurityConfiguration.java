@@ -22,18 +22,12 @@ public class SecurityConfiguration{
     private DataSource dataSource;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//          http.csrf().disable()
-//                  .authorizeHttpRequests()
-//                  .requestMatchers(HttpMethod.POST,"/v1/user").permitAll()
-//                  .requestMatchers(HttpMethod.GET,"/healthz").permitAll()
-//                  .anyRequest().authenticated()
-//                  .and().httpBasic();
-        http.csrf().disable()
-                .authorizeRequests()
-                .requestMatchers(HttpMethod.PUT,"/v1/user/**").authenticated()
-                .requestMatchers(HttpMethod.GET,"/v1/user/**").authenticated()
-                .anyRequest().permitAll()
-                .and().httpBasic();
+          http.csrf().disable()
+                  .authorizeHttpRequests()
+                  .requestMatchers(HttpMethod.POST,"/v1/user").permitAll()
+                  .requestMatchers(HttpMethod.GET,"/healthz").permitAll()
+                  .anyRequest().authenticated()
+                  .and().httpBasic();
           return http.build();
     }
 
