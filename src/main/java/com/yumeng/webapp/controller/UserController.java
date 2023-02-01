@@ -2,8 +2,6 @@ package com.yumeng.webapp.controller;
 
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.UserRepository;
-import org.postgresql.util.PSQLException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
