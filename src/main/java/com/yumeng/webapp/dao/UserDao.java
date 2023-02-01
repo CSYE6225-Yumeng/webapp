@@ -10,11 +10,21 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 public interface UserDao {  // data access object
     @Transaction
-    @SqlQuery("INSERT INTO users(first_name, last_name, password, username) " +
-            "VALUES(:firstName,:lastName,:password,:username) " +
+    @SqlQuery("INSERT INTO users(first_name, last_name, password, username, enabled) " +
+            "VALUES(:firstName,:lastName,:password,:username, :enabled) " +
             "returning id, first_name, last_name, username, account_created, account_updated ")
     @RegisterBeanMapper(User.class)
     User createUser(@BindBean User user);
+
+
+    @Transaction
+    @SqlQuery(
+            "INSERT INTO authorities(username, authority) " +
+            "VALUES(:username,:id) " +
+                    "returning id ")
+    @RegisterBeanMapper(User.class)
+    String createAuth(@BindBean User user);
+
 
     @SqlQuery("SELECT * FROM users WHERE id = :id")
     @RegisterBeanMapper(User.class)

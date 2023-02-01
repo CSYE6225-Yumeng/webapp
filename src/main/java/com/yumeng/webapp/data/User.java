@@ -1,12 +1,10 @@
 package com.yumeng.webapp.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 
 import java.util.Collection;
 import java.util.Date;
@@ -30,8 +28,20 @@ public class User implements UserDetails {
     private Date accountCreated;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date accountUpdated;
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean enabled;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Set<GrantedAuthority> authorities;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean accountNonExpired;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean accountNonLocked;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean credentialsNonExpired;
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
