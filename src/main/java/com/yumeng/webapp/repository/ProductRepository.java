@@ -1,9 +1,7 @@
 package com.yumeng.webapp.repository;
 
-import com.yumeng.webapp.data.Authority;
 import com.yumeng.webapp.data.Product;
 import com.yumeng.webapp.data.User;
-import com.yumeng.webapp.util.HashUtil;
 import com.yumeng.webapp.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -48,6 +46,14 @@ public class ProductRepository {
         return null;
     }
 
+    public Product hasProduct(long ProductId){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        Product product = session.get(Product.class, ProductId);
+        transaction.commit();
+        return product;
+    }
+
     public Product updateProduct(Product product, Product getProduct) throws PSQLException {
         String name = product.getName();
         if(name != null){
@@ -74,5 +80,12 @@ public class ProductRepository {
         session.update(getProduct);
         transaction.commit();
         return getProduct;
+    }
+
+    public void deleteProduct(Product product) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.remove(product);
+        transaction.commit();
     }
 }

@@ -1,20 +1,14 @@
 package com.yumeng.webapp.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.Product;
-import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.ProductRepository;
-import com.yumeng.webapp.repository.UserRepository;
-import jakarta.persistence.Column;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
@@ -156,8 +150,7 @@ public class ProductController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body(errorInfo);
                 }else{
-                    Integer quantity = Integer.parseInt(entry.getValue().toString());
-                    product.setQuantity(quantity);
+                    product.setQuantity(Integer.parseInt(entry.getValue().toString()));
                 }
             } else {
                 ErrorInfo errorInfo = new ErrorInfo(400, "You can only update name, description, sku, manufacturer and quantity in database!");
@@ -175,5 +168,24 @@ public class ProductController {
         }
     }
 
+    @DeleteMapping(value = "/v1/product/{productId}")  // @RequestBody User user
+    public ResponseEntity updateUserPatch(@PathVariable Long productId, Principal principal) {
+        String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
+        // 403 & 404
+        Product getProduct = productRepository.hasProduct(productId);
+        if (getProduct == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else if(! userId.equals(Long.toString(getProduct.getUser().getId()))){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        // delete & 400 other error
+        try {
+            productRepository.deleteProduct(getProduct);
+            return ResponseEntity.noContent().build();
+        }catch (Exception e){
+            ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
+            return ResponseEntity.badRequest().body(errorInfo);
+        }
+    }
 
 }
