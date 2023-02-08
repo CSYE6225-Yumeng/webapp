@@ -16,11 +16,19 @@ import java.util.Map;
 @Component
 @Repository
 public class ProductRepository {
+    public static Map<String, Object> getProduct(long productId) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        Product product = session.get(Product.class, productId);
+        transaction.commit();
+        return product.getProductResponse();
+    }
+
     public Map<String, Object> createProduct (Product product, String userid) throws HibernateException {
         Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         User user = session.get(User.class, userid);
         product.setUser(user);
-        Transaction transaction = session.beginTransaction();
         session.save(product);
         transaction.commit();
         return product.getProductResponse();

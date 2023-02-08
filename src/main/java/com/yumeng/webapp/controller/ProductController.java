@@ -37,6 +37,19 @@ public class ProductController {
         }
     }
 
+    @GetMapping(
+            value = "/v1/product/{ProductId}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getUser(@PathVariable long ProductId) {
+        try {
+            Map<String, Object> gProduct = ProductRepository.getProduct(ProductId);
+            return ResponseEntity.status(HttpStatus.OK).body(gProduct);
+        }catch (Exception e){
+            ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
+        }
+    }
+
 //    @PutMapping(
 //            value = "/v1/product/{ProductId}",
 //            produces = MediaType.APPLICATION_JSON_VALUE,
@@ -72,8 +85,6 @@ public class ProductController {
 //            ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
 //            return ResponseEntity.badRequest().body(errorInfo);
 //        }
-//
-//
 //    }
 
 
