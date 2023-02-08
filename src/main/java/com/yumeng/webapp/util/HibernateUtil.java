@@ -35,8 +35,6 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(User.class);
                 configuration.addAnnotatedClass(Authority.class);
                 configuration.addAnnotatedClass(Product.class);
-//                configuration.setListener("pre-insert", new PreInsertListener());
-//                configuration.setListener("pre-update", new PreInsertListener());
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
@@ -51,9 +49,4 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-//    public static void shutdown() {
-//        if (registry != null) {
-//            StandardServiceRegistryBuilder.destroy(registry);
-//        }
-//    }
 }
