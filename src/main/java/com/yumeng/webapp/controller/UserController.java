@@ -45,7 +45,7 @@ public class UserController {
     @GetMapping(
             value = "/v1/user/{userId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUser(@PathVariable long userId, Principal principal) {
+    public ResponseEntity getUser(@PathVariable Long userId, Principal principal) {
         String authId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         if(authId.equals(Long.toString(userId))) {
             try {
@@ -65,7 +65,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )  // @RequestBody User user
-    public ResponseEntity updateUser(@RequestBody Map<String,Object> params, @PathVariable long userId, Principal principal) {
+    public ResponseEntity updateUser(@RequestBody Map<String,Object> params, @PathVariable Long userId, Principal principal) {
         String authId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403
         if(!authId.equals(Long.toString(userId))) {
@@ -87,18 +87,7 @@ public class UserController {
                         .body(errorInfo);
             }
         }
-//        System.out.println(user.getId());
-//        System.out.println(user.getUsername());
-//        System.out.println(user.getAccountUpdated());
-//        System.out.println(user.getAccountUpdated());
-//        System.out.println(user.getAuthorities());
-//        if (user.getId() == 0L && Objects.isNull(user.getUsername()) &&
-//                Objects.isNull(user.getAccountUpdated()) && Objects.isNull(user.getAccountUpdated())){
-//        }else{
-//            ErrorInfo errorInfo = new ErrorInfo(400, "You can only update first_name, last_name and password in database!");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(errorInfo);
-//        }
+
         // 400 other error
         try {
             User newUser = userRepository.updateUsers(userId, user);

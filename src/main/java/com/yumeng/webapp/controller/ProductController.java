@@ -1,16 +1,20 @@
 package com.yumeng.webapp.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.Product;
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.ProductRepository;
 import com.yumeng.webapp.repository.UserRepository;
+import jakarta.persistence.Column;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
@@ -26,8 +30,33 @@ public class ProductController {
             value = "/v1/product",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createProduct(@RequestBody Product product, Principal principal) {
+    public ResponseEntity createProduct(@RequestBody Map<String,Object> params, Principal principal) {
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
+        // set & quantity
+        Product product = new Product();
+        for (Map.Entry<String, Object> entry: params.entrySet()){
+            if (Objects.equals(entry.getKey(), "name")){
+                product.setName(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "description")){
+                product.setDescription(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "sku")){
+                product.setSku(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "manufacturer")){
+                product.setManufacturer(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "quantity")){
+                if(! (entry.getValue() instanceof Integer)){
+                    ErrorInfo errorInfo = new ErrorInfo(400, "Quantity must be a positive Integer less than or equal to 100!");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(errorInfo);
+                }else{
+                    product.setQuantity(Integer.parseInt(entry.getValue().toString()));
+                }
+            } else {
+                ErrorInfo errorInfo = new ErrorInfo(400, "You can only contains name, description, sku, manufacturer and quantity in creating!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(errorInfo);
+            }
+        }
         try {
             Map<String, Object> cProduct = productRepository.createProduct(product, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(cProduct);
@@ -38,11 +67,11 @@ public class ProductController {
     }
 
     @GetMapping(
-            value = "/v1/product/{ProductId}",
+            value = "/v1/product/{productId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUser(@PathVariable long ProductId) {
+    public ResponseEntity getUser(@PathVariable Long productId) {
         try {
-            Map<String, Object> gProduct = ProductRepository.getProduct(ProductId);
+            Map<String, Object> gProduct = ProductRepository.getProduct(productId);
             return ResponseEntity.status(HttpStatus.OK).body(gProduct);
         }catch (Exception e){
             ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
@@ -50,42 +79,101 @@ public class ProductController {
         }
     }
 
-//    @PutMapping(
-//            value = "/v1/product/{ProductId}",
-//            produces = MediaType.APPLICATION_JSON_VALUE,
-//            consumes = MediaType.APPLICATION_JSON_VALUE
-//    )  // @RequestBody User user
-//    public ResponseEntity updateUser(@RequestBody Product product, @PathVariable long ProductId, Principal principal) {
-//        String authId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
-//        // 403
-//        if(!authId.equals(Long.toString(userId))) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//
-//        // 400 Attempt to update any other field (except First Name, Last Name and Password)
-//        User user = new User();
-//        for (Map.Entry<String, Object> entry: params.entrySet()){
-//            if (Objects.equals(entry.getKey(), "first_name")){
-//                user.setFirstName(entry.getValue().toString());
-//            }else if(Objects.equals(entry.getKey(), "last_name")){
-//                user.setLastName(entry.getValue().toString());
-//            }else if(Objects.equals(entry.getKey(), "password")){
-//                user.setPassword(entry.getValue().toString());
-//            } else{
-//                ErrorInfo errorInfo = new ErrorInfo(400, "You can only update first_name, last_name and password in database!");
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                        .body(errorInfo);
-//            }
-//        }
-//        // 400 other error
-//        try {
-//            User newUser = userRepository.updateUsers(userId, user);
-//            return ResponseEntity.noContent().build();
-//        }catch (Exception e){
-//            ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
-//            return ResponseEntity.badRequest().body(errorInfo);
-//        }
-//    }
+    @PutMapping(
+            value = "/v1/product/{productId}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )  // @RequestBody User user
+    public ResponseEntity updateUser(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
+        String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
+        // 403
+        Product getProduct = productRepository.hasPermission(userId, productId);
+        if(getProduct == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        // set & quantity
+        Product product = new Product();
+        for (Map.Entry<String, Object> entry: params.entrySet()){
+            if (Objects.equals(entry.getKey(), "name")){
+                product.setName(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "description")){
+                product.setDescription(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "sku")){
+                product.setSku(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "manufacturer")){
+                product.setManufacturer(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "quantity")){
+                if(! (entry.getValue() instanceof Integer)){
+                    ErrorInfo errorInfo = new ErrorInfo(400, "Quantity must be a positive Integer less than or equal to 100!");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(errorInfo);
+                }else{
+                    product.setQuantity(Integer.parseInt(entry.getValue().toString()));
+                }
+            } else {
+                ErrorInfo errorInfo = new ErrorInfo(400, "You can only update name, description, sku, manufacturer and quantity in database!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(errorInfo);
+            }
+        }
+        // 400 other error
+        try {
+            Product uProduct = productRepository.updateProduct(product, getProduct);
+            return ResponseEntity.noContent().build();
+        }catch (Exception e){
+            ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
+            return ResponseEntity.badRequest().body(errorInfo);
+        }
+    }
+
+
+    @PatchMapping(
+            value = "/v1/product/{productId}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )  // @RequestBody User user
+    public ResponseEntity updateUserPatch(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
+        String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
+        // 403
+        Product getProduct = productRepository.hasPermission(userId, productId);
+        if(getProduct == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        // set & quantity
+        Product product = new Product();
+        for (Map.Entry<String, Object> entry: params.entrySet()){
+            if (Objects.equals(entry.getKey(), "name")){
+                product.setName(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "description")){
+                product.setDescription(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "sku")){
+                product.setSku(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "manufacturer")){
+                product.setManufacturer(entry.getValue().toString());
+            }else if(Objects.equals(entry.getKey(), "quantity")){
+                if(! (entry.getValue() instanceof Integer)){
+                    ErrorInfo errorInfo = new ErrorInfo(400, "Quantity must be a positive Integer less than or equal to 100!");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(errorInfo);
+                }else{
+                    Integer quantity = Integer.parseInt(entry.getValue().toString());
+                    product.setQuantity(quantity);
+                }
+            } else {
+                ErrorInfo errorInfo = new ErrorInfo(400, "You can only update name, description, sku, manufacturer and quantity in database!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(errorInfo);
+            }
+        }
+        // 400 other error
+        try {
+            Product uProduct = productRepository.updateProduct(product, getProduct);
+            return ResponseEntity.noContent().build();
+        }catch (Exception e){
+            ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
+            return ResponseEntity.badRequest().body(errorInfo);
+        }
+    }
 
 
 }

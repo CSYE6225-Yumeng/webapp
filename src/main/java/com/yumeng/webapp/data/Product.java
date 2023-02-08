@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.aspectj.lang.annotation.RequiredTypes;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -40,9 +41,10 @@ public class Product {
     private String manufacturer;
     @JsonProperty("quantity")
     @Column(name = "quantity", nullable = false)
-    @Max(value=100L)
-    @Min(value=0L)
-    private long quantity;
+//    @Max(value=100, message = "Quantity must be a positive Integer less than or equal to 100!")
+//    @Min(value=0, message = "Quantity must be a positive Integer less than or equal to 100!")
+    @Range(max=100, min=0, message = "Quantity must be a positive Integer less than or equal to 100!")
+    private Integer quantity;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @CreatedDate
     @Column(name = "date_added")
@@ -96,7 +98,7 @@ public class Product {
         this.manufacturer = manufacturer;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -132,7 +134,7 @@ public class Product {
         return manufacturer;
     }
 
-    public long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

@@ -42,7 +42,7 @@ class UserControllerTest {
         Date date = formatter.parse(dateInString);
         createReturnUser.setAccountCreated(date);
         createReturnUser.setAccountUpdated(date);
-        createReturnUser.setId(1);
+        createReturnUser.setId(1L);
     }
 
     @Test

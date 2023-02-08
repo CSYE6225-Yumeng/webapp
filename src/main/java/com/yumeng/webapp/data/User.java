@@ -40,7 +40,7 @@ public class User implements UserDetails{  // implements UserDetails
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty("first_name")
     @Column(name = "first_name", nullable = false)
@@ -105,7 +105,7 @@ public class User implements UserDetails{  // implements UserDetails
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -161,7 +161,7 @@ public class User implements UserDetails{  // implements UserDetails
         return accountUpdated;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
