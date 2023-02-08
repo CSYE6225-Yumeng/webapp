@@ -15,11 +15,14 @@ import java.util.Map;
 @Component
 @Repository
 public class ProductRepository {
-    public static Map<String, Object> getProduct(long productId) {
+    public Map<String, Object> getProduct(long productId) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         Product product = session.get(Product.class, productId);
         transaction.commit();
+        if (product == null){
+            return null;
+        }
         return product.getProductResponse();
     }
 

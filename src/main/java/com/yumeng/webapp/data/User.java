@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 @EntityListeners(value = AuditingEntityListener.class)
 public class User implements UserDetails{  // implements UserDetails
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -34,17 +34,19 @@ public class User implements UserDetails{  // implements UserDetails
     @JsonProperty("last_name")
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "username", nullable = false)
+    @JsonProperty("username")
     private String username;
     @Column(name = "account_created")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "account_created",access = JsonProperty.Access.READ_ONLY)
     @CreatedDate
     private Date accountCreated;
     @Column(name = "account_updated")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "account_updated",access = JsonProperty.Access.READ_ONLY)
     @LastModifiedDate
     private Date accountUpdated;
 

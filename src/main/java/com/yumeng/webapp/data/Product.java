@@ -43,11 +43,11 @@ public class Product {
 //    @Min(value=0, message = "Quantity must be a positive Integer less than or equal to 100!")
     @Range(max=100, min=0, message = "Quantity must be a positive Integer less than or equal to 100!")
     private Integer quantity;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "date_added", access = JsonProperty.Access.READ_ONLY)
     @CreatedDate
     @Column(name = "date_added")
     private Date dateAdded;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "date_last_updated", access = JsonProperty.Access.READ_ONLY)
     @Column(name = "date_last_updated")
     @LastModifiedDate
     private Date dateLastUpdated;
