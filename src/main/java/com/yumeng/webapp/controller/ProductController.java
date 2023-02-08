@@ -110,6 +110,32 @@ public class ProductController {
                         .body(errorInfo);
             }
         }
+        if (product.getName() == null){
+            ErrorInfo errorInfo = new ErrorInfo(400, "PUT request ask for all required fields: name, description, sku, manufacturer and quantity!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(errorInfo);
+        }
+        if (product.getDescription() == null){
+            ErrorInfo errorInfo = new ErrorInfo(400, "PUT request ask for all required fields: name, description, sku, manufacturer and quantity!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(errorInfo);
+        }
+        if (product.getSku() == null){
+            ErrorInfo errorInfo = new ErrorInfo(400, "PUT request ask for all required fields: name, description, sku, manufacturer and quantity!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(errorInfo);
+        }
+        if (product.getManufacturer() == null){
+            ErrorInfo errorInfo = new ErrorInfo(400, "PUT request ask for all required fields: name, description, sku, manufacturer and quantity!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(errorInfo);
+        }
+        if (product.getQuantity() == null){
+            ErrorInfo errorInfo = new ErrorInfo(400, "PUT request ask for all required fields: name, description, sku, manufacturer and quantity!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(errorInfo);
+        }
+
         // 400 other error
         try {
             Product uProduct = productRepository.updateProduct(product, getProduct);
