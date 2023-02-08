@@ -1,6 +1,17 @@
 package com.yumeng.webapp.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -10,45 +21,88 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-
-public class User implements UserDetails {
+@Data
+@Entity
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@EntityListeners(value = AuditingEntityListener.class)
+public class User implements UserDetails{  // implements UserDetails
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
 
     @JsonProperty("first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @JsonProperty("last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password", nullable = false)
     private String password;
+    @Column(name = "username", nullable = false)
     private String username;
+    @Column(name = "account_created")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @CreatedDate
     private Date accountCreated;
+    @Column(name = "account_updated")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @LastModifiedDate
     private Date accountUpdated;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean enabled;
+
+
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name="enabled")
+    private boolean enabled = true;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Transient
     private Set<GrantedAuthority> authorities;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean accountNonExpired;
+    @Column(name="account_non_expired")
+    private boolean accountNonExpired=true;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean accountNonLocked;
+    @Column(name="account_non_locked")
+    private boolean accountNonLocked=true;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean credentialsNonExpired;
+    @Column(name="credentials_non_expired")
+    private boolean credentialsNonExpired=true;
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setAuthorities(Set<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     public long getId() {
@@ -69,6 +123,7 @@ public class User implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("USER"));
         return authorities;
     }
+
 
     public String getPassword() {
         return password;

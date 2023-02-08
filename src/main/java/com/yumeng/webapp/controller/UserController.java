@@ -3,6 +3,8 @@ package com.yumeng.webapp.controller;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.UserRepository;
+import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ public class UserController {
                 User cUser = userRepository.createUser(user);
                 return ResponseEntity.status(HttpStatus.CREATED).body(cUser);
             }catch (Exception e){
+//                String detail = ((ConstraintViolationException) e).getSQLException().getMessage();
                 ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
                 return ResponseEntity.badRequest().body(errorInfo);
             }

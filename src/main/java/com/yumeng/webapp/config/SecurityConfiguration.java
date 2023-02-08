@@ -26,6 +26,7 @@ public class SecurityConfiguration{
                   .authorizeHttpRequests()
                   .requestMatchers(HttpMethod.POST,"/v1/user").permitAll()
                   .requestMatchers(HttpMethod.GET,"/healthz").permitAll()
+                  .requestMatchers(HttpMethod.GET,"/v1/product/**").permitAll()
                   .anyRequest().authenticated()
                   .and().httpBasic();
           return http.build();
