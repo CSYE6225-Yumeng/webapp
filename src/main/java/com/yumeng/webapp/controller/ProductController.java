@@ -63,9 +63,13 @@ public class ProductController {
     @GetMapping(
             value = "/v1/product/{productId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUser(@PathVariable Long productId) {
+    public ResponseEntity getProduct(@PathVariable Long productId) {
         try {
-            Map<String, Object> gProduct = ProductRepository.getProduct(productId);
+            Map<String, Object> gProduct = productRepository.getProduct(productId);
+            if (gProduct == null){
+                ErrorInfo errorInfo = new ErrorInfo(404,"the product is null!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(gProduct);
         }catch (Exception e){
             ErrorInfo errorInfo = new ErrorInfo(400, e.getMessage());
@@ -78,7 +82,7 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )  // @RequestBody User user
-    public ResponseEntity updateUser(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
+    public ResponseEntity updateProduct(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403
         Product getProduct = productRepository.hasPermission(userId, productId);
@@ -152,7 +156,7 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )  // @RequestBody User user
-    public ResponseEntity updateUserPatch(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
+    public ResponseEntity updateProductPatch(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403
         Product getProduct = productRepository.hasPermission(userId, productId);
@@ -195,7 +199,7 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "/v1/product/{productId}")  // @RequestBody User user
-    public ResponseEntity updateUserPatch(@PathVariable Long productId, Principal principal) {
+    public ResponseEntity deleteProduct(@PathVariable Long productId, Principal principal) {
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403 & 404
         Product getProduct = productRepository.hasProduct(productId);
