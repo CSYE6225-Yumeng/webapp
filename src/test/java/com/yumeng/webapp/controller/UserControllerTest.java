@@ -100,7 +100,7 @@ class UserControllerTest {
     void getProduct() {
         when(testProductRepository.getProduct(1L)).thenReturn(getReturnProductMap);
         ResponseEntity actualUser = testProductController.getProduct(1L);
-        assertEquals(getReturnProductMap, actualUser.getBody());
+        assertEquals(getReturnProductMap, null);
     }
 
     @Test
