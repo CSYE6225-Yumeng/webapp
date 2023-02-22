@@ -69,6 +69,7 @@ build {
   ]
 
 
+
   provisioner "shell" {
     #    environment_vars = [
     #      "DEBIAN_FRONTEND=noninteractive",
@@ -78,28 +79,16 @@ build {
     scripts = [
       "packer/build_image.sh"
     ]
-    #    inline = [
-    #      "sudo yum -y update",
-    #      "sudo yum -y upgrade",
-    #      "sudo amazon-linux-extras install java-openjdk11", //ds sudo amazon-linux-extras install java-openjdk11
-    #      // "sudo amazon-linux-extras install tomcat9",
-    #      // "sudo chkconfig tomcat on",
-    #      // "sudo service tomcat start",
-    #      // "sudo amazon-linux-extras install postgresql14",
-    #      // "sudo amazon-linux-extras enable postgresql15",
-    #      // "sudo yum install postgresql-server -y",
-    #      // "sudo postgresql-setup initdb",
-    #      // "sudo systemctl start postgresql",
-    #      // "sudo systemctl enable postgresql",
-    #      // "sudo systemctl status postgresql",
-    #
-    #      // "sudo yum clean"
-    #    ]
   }
 
   provisioner "file" {
     source      = "./target/webapp-0.0.1-SNAPSHOT.jar"
     destination = "/opt/deployment/webapp-0.0.1-SNAPSHOT.jar"
+  }
+
+  provisioner "file" {
+    source      = "./packer/webapp.service"
+    destination = "/etc/systemd/system/webapp.service"
   }
 
   provisioner "shell" {
