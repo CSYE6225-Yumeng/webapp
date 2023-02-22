@@ -17,5 +17,16 @@ jobs:
           java-version: '18'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
+      - name: test & build with Maven
         run: mvn --batch-mode --update-snapshots package
+      - name: packer build
+        env: # Or as an environment variable
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          PACKER_LOG: 1
+        run: |
+          packer fmt ./packer && packer init ./packer
+          packer build ./packer
+      - name: start applicaiton
+        run: java -jar target/webapp-0.0.1-SNAPSHOT.jar
+          
