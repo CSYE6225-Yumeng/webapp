@@ -23,7 +23,7 @@ public class HibernateUtil {
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "org.postgresql.Driver");
                 settings.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true");
-                settings.put(Environment.USER, "yumeng");
+                settings.put(Environment.USER, "postgres");
                 settings.put(Environment.PASS, "yumengpass");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
                 settings.put(Environment.SHOW_SQL, "true");
