@@ -14,7 +14,9 @@
     <name>webapp</name>
     <description>webapp</description>
     <properties>
-        <java.version>18</java.version>
+<!--        <java.version>11</java.version>-->
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -102,6 +104,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                 <configuration>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
         </plugins>
     </build>

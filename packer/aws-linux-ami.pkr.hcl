@@ -27,6 +27,11 @@ variable "subnet_id" {
   default = "subnet-07cf96be39beac432"
 }
 
+variable "share_account_id" {
+  type    = string
+  default = "133078896069"
+}
+
 source "amazon-ebs" "amazon_linux_2" {
   // ami_name        = "yumeng"
   ami_name        = "yumeng_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
@@ -40,6 +45,8 @@ source "amazon-ebs" "amazon_linux_2" {
   ami_regions = [
     "${var.aws_region}"
   ]
+
+  ami_users = ["${var.share_account_id}"]
 
   aws_polling {
     delay_seconds = 120
@@ -61,27 +68,45 @@ build {
     "source.amazon-ebs.amazon_linux_2"
   ]
 
-  provisioner "shell" {
-    environment_vars = [
-      "DEBIAN_FRONTEND=noninteractive",
-      "CHECKPOINT_DISABLE=1"
-    ]
-    inline = [
-      "sudo yum -y update",
-      "sudo yum -y upgrade",
-      "sudo amazon-linux-extras install java-openjdk11", //ds sudo amazon-linux-extras install java-openjdk11
-      // "sudo amazon-linux-extras install tomcat9",
-      // "sudo chkconfig tomcat on",
-      // "sudo service tomcat start",
-      // "sudo amazon-linux-extras install postgresql14",
-      // "sudo amazon-linux-extras enable postgresql15",
-      // "sudo yum install postgresql-server -y",
-      // "sudo postgresql-setup initdb",
-      // "sudo systemctl start postgresql",
-      // "sudo systemctl enable postgresql",
-      // "sudo systemctl status postgresql", 
 
-      // "sudo yum clean"
+  provisioner "shell" {
+    #    environment_vars = [
+    #      "DEBIAN_FRONTEND=noninteractive",
+    #      "CHECKPOINT_DISABLE=1"
+    #    ]
+
+    scripts = [
+      "packer/build_image.sh"
+    ]
+    #    inline = [
+    #      "sudo yum -y update",
+    #      "sudo yum -y upgrade",
+    #      "sudo amazon-linux-extras install java-openjdk11", //ds sudo amazon-linux-extras install java-openjdk11
+    #      // "sudo amazon-linux-extras install tomcat9",
+    #      // "sudo chkconfig tomcat on",
+    #      // "sudo service tomcat start",
+    #      // "sudo amazon-linux-extras install postgresql14",
+    #      // "sudo amazon-linux-extras enable postgresql15",
+    #      // "sudo yum install postgresql-server -y",
+    #      // "sudo postgresql-setup initdb",
+    #      // "sudo systemctl start postgresql",
+    #      // "sudo systemctl enable postgresql",
+    #      // "sudo systemctl status postgresql",
+    #
+    #      // "sudo yum clean"
+    #    ]
+  }
+
+  provisioner "file" {
+    source      = "./target/webapp-0.0.1-SNAPSHOT.jar"
+    destination = "/opt/deployment/webapp-0.0.1-SNAPSHOT.jar"
+  }
+
+  provisioner "shell" {
+    scripts = [
+      "packer/launch_app.sh"
     ]
   }
+
+
 }
