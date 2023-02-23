@@ -4,11 +4,13 @@ name: Test CreateUser
 on:
   pull_request:
     branches: [ main ]
+    types:
+      - closed
 
 jobs:
-  build:
+  build_after_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 18
