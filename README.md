@@ -48,3 +48,7 @@ run src -> test -> java -> com.yumeng.webapp.controller -> UserControllerTest.ja
    );`
 9. `create unique index ix_auth_username on authorities (username,authority);`
 10. run src -> main -> java -> com.yumeng.webapp -> WebappApplication.java
+
+
+
+test
