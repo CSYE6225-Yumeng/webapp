@@ -1,6 +1,7 @@
 package com.yumeng.webapp.util;
 
 import com.yumeng.webapp.data.Authority;
+import com.yumeng.webapp.data.Image;
 import com.yumeng.webapp.data.Product;
 import com.yumeng.webapp.data.User;
 import org.hibernate.SessionFactory;
@@ -22,12 +23,12 @@ public class HibernateUtil {
                 // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "org.postgresql.Driver");
-//                settings.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true");
-//                settings.put(Environment.USER, "postgres");
-//                settings.put(Environment.PASS, "yumengpass");
-                settings.put(Environment.URL, "jdbc:postgresql://"+System.getenv("DB_HOSTNAME")+":5432/postgres?createDatabaseIfNotExist=true");
-                settings.put(Environment.USER, System.getenv("DB_USERNAME"));
-                settings.put(Environment.PASS, System.getenv("DB_PASSWORD"));
+                settings.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true");
+                settings.put(Environment.USER, "yumeng");
+                settings.put(Environment.PASS, "yumengpass");
+//                settings.put(Environment.URL, "jdbc:postgresql://"+System.getenv("DB_HOSTNAME")+":5432/postgres?createDatabaseIfNotExist=true");
+//                settings.put(Environment.USER, System.getenv("DB_USERNAME"));
+//                settings.put(Environment.PASS, System.getenv("DB_PASSWORD"));
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
                 settings.put(Environment.SHOW_SQL, "true");
 
@@ -38,6 +39,7 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(User.class);
                 configuration.addAnnotatedClass(Authority.class);
                 configuration.addAnnotatedClass(Product.class);
+                configuration.addAnnotatedClass(Image.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
