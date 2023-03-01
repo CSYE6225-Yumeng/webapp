@@ -19,7 +19,7 @@ jobs:
           cache: maven
       - name: test & build with Maven
         run: mvn --batch-mode --update-snapshots package
-      - name: packer build
+      - name: packer validate
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

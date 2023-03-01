@@ -22,9 +22,12 @@ public class HibernateUtil {
                 // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "org.postgresql.Driver");
-                settings.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true");
-                settings.put(Environment.USER, "postgres");
-                settings.put(Environment.PASS, "yumengpass");
+//                settings.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres?createDatabaseIfNotExist=true");
+//                settings.put(Environment.USER, "postgres");
+//                settings.put(Environment.PASS, "yumengpass");
+                settings.put(Environment.URL, "jdbc:postgresql://"+System.getenv("DB_HOSTNAME")+":5432/postgres?createDatabaseIfNotExist=true");
+                settings.put(Environment.USER, System.getenv("DB_USERNAME"));
+                settings.put(Environment.PASS, System.getenv("DB_PASSWORD"));
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
                 settings.put(Environment.SHOW_SQL, "true");
 
