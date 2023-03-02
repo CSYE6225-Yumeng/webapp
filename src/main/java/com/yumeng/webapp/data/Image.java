@@ -31,7 +31,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.UUID, generator = "uuid2")
 //    @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "image_id")
-    private UUID imageId;
+    private String imageId;
 
     @Column(name = "product_id", nullable = false)
     @JsonProperty("product_id")
@@ -74,11 +74,11 @@ public class Image {
 //    }
 
 
-    public UUID getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(UUID imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
