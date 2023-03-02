@@ -6,6 +6,12 @@ After=syslog.target
 User=ec2-user
 ExecStart=/opt/deployment/webapp-0.0.1-SNAPSHOT.jar
 SuccessExitStatus=143
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=webapp
+EnvironmentFile=/etc/environment
 
 [Install]
 WantedBy=multi-user.target
