@@ -1,5 +1,7 @@
 package com.yumeng.webapp.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,16 +22,19 @@ public class SecurityConfiguration{
 
     @Autowired
     private DataSource dataSource;
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-          http.csrf().disable()
-                  .authorizeHttpRequests()
-                  .requestMatchers(HttpMethod.POST,"/v1/user").permitAll()
-                  .requestMatchers(HttpMethod.GET,"/healthz").permitAll()
-                  .requestMatchers(HttpMethod.GET,"/v1/product/**").permitAll()
-                  .anyRequest().authenticated()
-                  .and().httpBasic();
-          return http.build();
+        logger.info("Set SecurityFilterChain...");
+        http.csrf().disable()
+              .authorizeHttpRequests()
+              .requestMatchers(HttpMethod.POST,"/v1/user").permitAll()
+              .requestMatchers(HttpMethod.GET,"/healthz").permitAll()
+              .requestMatchers(HttpMethod.GET,"/v1/product/**").permitAll()
+              .anyRequest().authenticated()
+              .and().httpBasic();
+        logger.info("[SUCCESS]Set SecurityFilterChain SUCCESS.");
+        return http.build();
     }
 
 
