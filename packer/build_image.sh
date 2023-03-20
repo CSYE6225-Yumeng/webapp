@@ -19,6 +19,8 @@ yes 2 | sudo update-alternatives --config java
 #sudo sed -i 's/peer/trust/g' /var/lib/pgsql/data/pg_hba.conf
 #sudo sed -i 's/ident/trust/g' /var/lib/pgsql/data/pg_hba.conf
 #sudo service postgresql restart
+# cloudwatch
+sudo yum install amazon-cloudwatch-agent
 # mkdir & policy
 sudo mkdir /opt/deployment
 sudo mkdir /var/log/apps
@@ -26,3 +28,4 @@ sudo mkdir /var/log/apps
 sudo chmod -R 777 /opt/deployment
 sudo chmod -R 777 /var/log/apps
 sudo chmod -R 777 /etc/systemd/system
+sudo chmod -R 777 /var/log

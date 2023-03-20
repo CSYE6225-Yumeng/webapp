@@ -91,6 +91,11 @@ build {
     destination = "/etc/systemd/system/webapp.service"
   }
 
+  provisioner "file" {
+    source      = "./packer/cloudwatch_config.json"
+    destination = "/opt/deployment/cloudwatch_config.json"
+  }
+
   provisioner "shell" {
     scripts = [
       "packer/launch_app.sh"

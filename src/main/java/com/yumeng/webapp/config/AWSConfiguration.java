@@ -4,6 +4,8 @@ import com.amazonaws.auth.*;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +27,16 @@ public class AWSConfiguration {
 //    @Value("${aws.s3.bucket.name}")
 //    private String profileName;
 
+    private static final Logger logger = LoggerFactory.getLogger(AWSConfiguration.class);
+
 
     @Bean
     public AmazonS3 s3() {
+        logger.info("Connect to Amazon S3...");
+        logger.info("PROFILE_NAME: {}", System.getenv("PROFILE_NAME"));
+        logger.info("REGION: {}", region);
+        logger.info("BUCKET_NAME: {}", bucketName);
+
         System.out.println("PROFILE_NAME:");
         System.out.println(System.getenv("PROFILE_NAME"));
 //        AWSCredentials awsCredentials =
@@ -37,11 +46,15 @@ public class AWSConfiguration {
 //                .withRegion(region)
 //                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
 //                .build();
-        return AmazonS3ClientBuilder
+        AmazonS3 amazons3 =  AmazonS3ClientBuilder
                 .standard()
                 .withRegion(region)
                 .withCredentials(new InstanceProfileCredentialsProvider(false))
                 .build();
+
+        logger.info("[SUCCESS]Connect to Amazon S3 SUCCESS.");
+
+        return amazons3;
 
     }
 }
