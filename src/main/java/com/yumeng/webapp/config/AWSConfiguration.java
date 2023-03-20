@@ -33,12 +33,9 @@ public class AWSConfiguration {
     @Bean
     public AmazonS3 s3() {
         logger.info("Connect to Amazon S3...");
-        logger.info("PROFILE_NAME: {}", System.getenv("PROFILE_NAME"));
-        logger.info("REGION: {}", region);
-        logger.info("BUCKET_NAME: {}", bucketName);
 
-        System.out.println("PROFILE_NAME:");
-        System.out.println(System.getenv("PROFILE_NAME"));
+//        System.out.println("PROFILE_NAME:");
+//        System.out.println(System.getenv("PROFILE_NAME"));
 //        AWSCredentials awsCredentials =
 //                new BasicAWSCredentials(accessKey, secretAccess);
 //        return AmazonS3ClientBuilder

@@ -12,11 +12,14 @@ import javax.sql.DataSource;
 
 @Configuration
 public class JdbiConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(AWSConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbiConfiguration.class);
     @Bean
     public Jdbi jdbi(DataSource dataSource){  //@Autowired DataSource dataSource
-        return Jdbi.create(dataSource)
+        logger.info("Connect to jdbi...");
+        Jdbi j = Jdbi.create(dataSource)
                 .installPlugin(new PostgresPlugin())
                 .installPlugin(new SqlObjectPlugin());
+        logger.info("[SUCCESS]Connect to jdbi SUCCESS.");
+        return j;
     }
 }
