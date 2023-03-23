@@ -1,5 +1,6 @@
 package com.yumeng.webapp.controller;
 
+import com.timgroup.statsd.StatsDClient;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.Product;
 import com.yumeng.webapp.data.User;
@@ -7,6 +8,9 @@ import com.yumeng.webapp.repository.ProductRepository;
 import com.yumeng.webapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLState;
 import org.postgresql.util.ServerErrorMessage;
@@ -21,13 +25,18 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 class UserControllerTest {
+    @Mock
+    private StatsDClient statsDClient;
+
     private User testUser = new User();
     private User createReturnUser = new User();
     private UserRepository testUserRepository = mock(UserRepository.class);
+    @InjectMocks
     private UserController testUserController = new UserController(testUserRepository);
 
     private Product testProduct = new Product();
@@ -35,10 +44,14 @@ class UserControllerTest {
 
     private Map<String, Object> getReturnProductMap;
     private ProductRepository testProductRepository = mock(ProductRepository.class);
+    @InjectMocks
     private ProductController testProductController = new ProductController(testProductRepository);
 
     @BeforeEach
     void setUp() throws ParseException {
+        MockitoAnnotations.openMocks(this);
+        doNothing().when(statsDClient).incrementCounter(anyString());
+
         testUser.setFirstName("Jane");
         testUser.setLastName("Doe");
         testUser.setPassword("somepassword");

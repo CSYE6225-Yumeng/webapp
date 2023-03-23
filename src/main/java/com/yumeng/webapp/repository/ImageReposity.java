@@ -2,6 +2,7 @@ package com.yumeng.webapp.repository;
 
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.yumeng.webapp.config.StatsDConfiguration;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.Image;
 import com.yumeng.webapp.data.Product;
@@ -12,6 +13,8 @@ import com.yumeng.webapp.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,8 @@ public class ImageReposity {
     private AmazonS3ServiceImpl amazonS3Service;
     @Value("${aws.s3.bucket.name}")
     private String bucketName;
+
+    private static final Logger logger = LoggerFactory.getLogger(ImageReposity.class);
     public Map<String, Object> createImage (MultipartFile file, String userid, Long productId) throws Exception {
         // upload imagefile to S3
         if (file.isEmpty()) {
@@ -45,10 +50,13 @@ public class ImageReposity {
         String fileName = String.format("%s", UUID.randomUUID()+"-"+file.getOriginalFilename());
 
         // Uploading file to s3
+        logger.info("Uploading file to s3...");
         PutObjectResult putObjectResult = amazonS3Service.upload(
                 path, fileName, Optional.of(metadata), file.getInputStream());
+        logger.info("Upload file to s3 successful");
 
         // save image metadata to database
+        logger.info("Saving image metadata to database...");
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         User user = session.get(User.class, userid);
@@ -59,6 +67,7 @@ public class ImageReposity {
         image.setUser(user);
         session.save(image);
         transaction.commit();
+        logger.info("Saving image metadata to database successful");
         return image.getImageResponse();
     }
 
@@ -67,7 +76,8 @@ public class ImageReposity {
         Transaction transaction = session.beginTransaction();
 
         String hql = "FROM Image WHERE productId='"+productId+"' AND user.id="+userId;
-        System.out.println(hql);
+
+//        System.out.println(hql);
         List<Image> images = new ArrayList<Image>();
         images =session.createQuery(hql, Image.class).getResultList();
         transaction.commit();
@@ -100,12 +110,15 @@ public class ImageReposity {
 
     public void deleteImage(Image image) {
         // delete S3
+        logger.info("Deleting image in S3...");
         amazonS3Service.delete(image.getS3BucketPath(), image.getFileName());
+        logger.info("Deleting image in S3 successful");
         // delete metadata in database
+        logger.info("Deleting image metadata in database...");
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         session.remove(image);
         transaction.commit();
-
+        logger.info("Deleting image metadata in database successful");
     }
 }

@@ -20,7 +20,7 @@ yes 2 | sudo update-alternatives --config java
 #sudo sed -i 's/ident/trust/g' /var/lib/pgsql/data/pg_hba.conf
 #sudo service postgresql restart
 # cloudwatch
-sudo yum install amazon-cloudwatch-agent
+yes | sudo yum install amazon-cloudwatch-agent
 # mkdir & policy
 sudo mkdir /opt/deployment
 sudo mkdir /var/log/apps

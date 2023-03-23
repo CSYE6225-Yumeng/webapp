@@ -1,11 +1,13 @@
 package com.yumeng.webapp.controller;
 
+import com.timgroup.statsd.StatsDClient;
 import com.yumeng.webapp.config.AWSConfiguration;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.User;
 import com.yumeng.webapp.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import java.util.Objects;
 public class UserController {
     private UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    @Autowired
+    private StatsDClient statsDClient;
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -31,6 +35,8 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User user) {
+        statsDClient.incrementCounter("endpoint.createUser.post");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[POST]create user request...");
         if (user.emailValidation()){
             try {
@@ -54,6 +60,8 @@ public class UserController {
             value = "/v1/user/{userId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUser(@PathVariable Long userId, Principal principal) {
+        statsDClient.incrementCounter("getUser.get");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[GET]get user request...");
         String authId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         if(authId.equals(Long.toString(userId))) {
@@ -78,6 +86,8 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )  // @RequestBody User user
     public ResponseEntity updateUser(@RequestBody Map<String,Object> params, @PathVariable Long userId, Principal principal) {
+        statsDClient.incrementCounter("updateUser.put");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[PUT]update user request...");
         String authId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403
