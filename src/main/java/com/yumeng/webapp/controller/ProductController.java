@@ -1,11 +1,13 @@
 package com.yumeng.webapp.controller;
 
+import com.timgroup.statsd.StatsDClient;
 import com.yumeng.webapp.config.SecurityConfiguration;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.Product;
 import com.yumeng.webapp.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import java.util.Objects;
 public class ProductController {
     private ProductRepository productRepository;
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    @Autowired
+    private StatsDClient statsDClient;
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -29,6 +33,8 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createProduct(@RequestBody Map<String,Object> params, Principal principal) {
+        statsDClient.incrementCounter("createProduct.post");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[POST]create product request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // set & quantity
@@ -73,6 +79,8 @@ public class ProductController {
             value = "/v1/product/{productId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getProduct(@PathVariable Long productId) {
+        statsDClient.incrementCounter("getProduct.get");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[GET]get product request...");
         try {
             Map<String, Object> gProduct = productRepository.getProduct(productId);
@@ -96,6 +104,8 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )  // @RequestBody User user
     public ResponseEntity updateProduct(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
+        statsDClient.incrementCounter("updateProduct.put");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[PUT]update product request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403
@@ -181,6 +191,8 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )  // @RequestBody User user
     public ResponseEntity updateProductPatch(@RequestBody Map<String,Object> params, @PathVariable Long productId, Principal principal) {
+        statsDClient.incrementCounter("updateProduct.patch");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[PATCH]update product request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403
@@ -230,6 +242,8 @@ public class ProductController {
 
     @DeleteMapping(value = "/v1/product/{productId}")  // @RequestBody User user
     public ResponseEntity deleteProduct(@PathVariable Long productId, Principal principal) {
+        statsDClient.incrementCounter("deleteProduct.delete");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[DELETE]delete product request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403 & 404

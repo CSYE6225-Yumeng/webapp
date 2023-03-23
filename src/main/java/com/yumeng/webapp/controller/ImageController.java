@@ -1,5 +1,6 @@
 package com.yumeng.webapp.controller;
 
+import com.timgroup.statsd.StatsDClient;
 import com.yumeng.webapp.data.ErrorInfo;
 import com.yumeng.webapp.data.Image;
 import com.yumeng.webapp.data.Product;
@@ -9,6 +10,7 @@ import com.yumeng.webapp.service.MetadataService;
 //import com.yumeng.webapp.service.MetadataServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ public class ImageController {
     private ImageReposity imageReposity;
 
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
+    @Autowired
+    private StatsDClient statsDClient;
     private ProductRepository productRepository;
 //    private MetadataServiceImpl metadataService;
     public ImageController(ImageReposity imageReposity, ProductRepository productRepository) {
@@ -39,6 +43,8 @@ public class ImageController {
                                         @RequestBody MultipartFile imageFile,
                                         @RequestBody MultipartFile fileType,
                                         Principal principal) {
+        statsDClient.incrementCounter("createImage.post");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[POST]create image request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // userId consist with productID
@@ -65,6 +71,8 @@ public class ImageController {
     public ResponseEntity getImage(@PathVariable String productId,
                                       @PathVariable String imageId,
                                       Principal principal) {
+        statsDClient.incrementCounter("getImage.get");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[GET]get image request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // userId consist with productID
@@ -95,6 +103,8 @@ public class ImageController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getImages(@PathVariable String productId,
                                       Principal principal) {
+        statsDClient.incrementCounter("getAllImages.get");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[GET]get all images request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // userId consist with productID
@@ -125,10 +135,12 @@ public class ImageController {
     }
 
     @DeleteMapping(value = "/v1/product/{productId}/image/{imageId}")  // @RequestBody User user
-    public ResponseEntity deleteProduct(
+    public ResponseEntity deleteImage(
             @PathVariable String productId,
             @PathVariable String imageId,
             Principal principal) {
+        statsDClient.incrementCounter("deleteImage.delete");
+        statsDClient.incrementCounter("all.api.call");
         logger.info("[DELETE]delete image request...");
         String userId = ((UsernamePasswordAuthenticationToken) principal).getAuthorities().toArray()[0].toString();
         // 403 & 404

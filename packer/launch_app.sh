@@ -2,11 +2,15 @@ sudo chmod +x /opt/deployment/webapp-0.0.1-SNAPSHOT.jar
 #sudo java -jar /opt/deployment/webapp-0.0.1-SNAPSHOT.jar
 
 #cloudWatch
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
-    -a fetch-config \
-    -m ec2 \
-    -c /opt/deployment/cloudwatch_config.json \
-    -s
+sudo touch /var/log/webapp.log
+sudo chmod o+x /var/log
+sudo chmod -R 777 /var/log/webapp.log
+
+#sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+#    -a fetch-config \
+#    -m ec2 \
+#    -c file:/opt/deployment/cloudwatch_config.json \
+#    -s
 
 #systemd
 sudo chmod -R 777 /etc/init.d
