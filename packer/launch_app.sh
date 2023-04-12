@@ -34,49 +34,49 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 #--profile $PROFILE_NAME \
 #--query 'LaunchTemplates[0].LaunchTemplateId' \
 #--output text`
-
-export LAUNCH_TEMPLATE_ID=`aws ec2 describe-launch-templates  \
---region us-west-1 \
-#--profile demo \
---query 'LaunchTemplates[0].LaunchTemplateId' \
---output text`
-
+#
+#export LAUNCH_TEMPLATE_ID=`aws ec2 describe-launch-templates  \
+#--region us-west-1 \
+##--profile demo \
+#--query 'LaunchTemplates[0].LaunchTemplateId' \
+#--output text`
+#
+##export IMAGE_ID=`aws ec2 describe-images \
+##--region $REGION \
+##--profile $PROFILE_NAME \
+##--filters "Name=name,Values=yumeng_*" \
+##--query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+##--output text`
+#
 #export IMAGE_ID=`aws ec2 describe-images \
-#--region $REGION \
-#--profile $PROFILE_NAME \
+#--region us-west-1 \
+##--profile demo \
 #--filters "Name=name,Values=yumeng_*" \
 #--query 'sort_by(Images, &CreationDate)[-1].ImageId' \
 #--output text`
-
-export IMAGE_ID=`aws ec2 describe-images \
---region us-west-1 \
-#--profile demo \
---filters "Name=name,Values=yumeng_*" \
---query 'sort_by(Images, &CreationDate)[-1].ImageId' \
---output text`
-
+#
+##aws ec2 create-launch-template-version \
+##  --launch-template-id $LAUNCH_TEMPLATE_ID \
+##  --version-description new_version \
+##  --source-version 1 \
+##  --launch-template-data "{\"ImageId\":\"${IMAGE_ID}\"}" \
+##  --region $REGION \
+##  --profile $PROFILE_NAME
+#
 #aws ec2 create-launch-template-version \
 #  --launch-template-id $LAUNCH_TEMPLATE_ID \
 #  --version-description new_version \
 #  --source-version 1 \
 #  --launch-template-data "{\"ImageId\":\"${IMAGE_ID}\"}" \
-#  --region $REGION \
-#  --profile $PROFILE_NAME
-
-aws ec2 create-launch-template-version \
-  --launch-template-id $LAUNCH_TEMPLATE_ID \
-  --version-description new_version \
-  --source-version 1 \
-  --launch-template-data "{\"ImageId\":\"${IMAGE_ID}\"}" \
-  --region us-west-1
-#  --profile demo
-
+#  --region us-west-1
+##  --profile demo
+#
+##aws autoscaling start-instance-refresh \
+##    --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME \
+##    --region $REGION \
+##    --profile $PROFILE_NAME
+#
 #aws autoscaling start-instance-refresh \
-#    --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME \
-#    --region $REGION \
-#    --profile $PROFILE_NAME
-
-aws autoscaling start-instance-refresh \
-    --auto-scaling-group-name csye6225-asg-spring2023 \
-    --region us-west-1
-#    --profile demo
+#    --auto-scaling-group-name csye6225-asg-spring2023 \
+#    --region us-west-1
+##    --profile demo
