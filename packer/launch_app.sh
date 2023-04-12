@@ -22,12 +22,12 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 
 # AWS CLI - Create a new Launch Template for the autoscaling group
 
-    aws configure set aws_access_key_id $DEMO_AWS_ACCESS_KEY_ID --profile demo
-aws configure set aws_secret_access_key $DEMO_AWS_SECRET_ACCESS_KEY --profile demo
-aws configure set region us-west-1 --profile demo
-aws configure set aws_access_key_id $DEV_AWS_ACCESS_KEY_ID --profile dev
-aws configure set aws_secret_access_key $DEV_AWS_SECRET_ACCESS_KEY --profile dev
-aws configure set region us-west-1 --profile dev
+#aws configure set aws_access_key_id $DEMO_AWS_ACCESS_KEY_ID --profile demo
+#aws configure set aws_secret_access_key $DEMO_AWS_SECRET_ACCESS_KEY --profile demo
+#aws configure set region us-west-1 --profile demo
+#aws configure set aws_access_key_id $DEV_AWS_ACCESS_KEY_ID --profile dev
+#aws configure set aws_secret_access_key $DEV_AWS_SECRET_ACCESS_KEY --profile dev
+#aws configure set region us-west-1 --profile dev
 
 #export LAUNCH_TEMPLATE_ID=`aws ec2 describe-launch-templates  \
 #--region $REGION \
@@ -37,7 +37,7 @@ aws configure set region us-west-1 --profile dev
 
 export LAUNCH_TEMPLATE_ID=`aws ec2 describe-launch-templates  \
 --region us-west-1 \
---profile demo \
+#--profile demo \
 --query 'LaunchTemplates[0].LaunchTemplateId' \
 --output text`
 
@@ -50,7 +50,7 @@ export LAUNCH_TEMPLATE_ID=`aws ec2 describe-launch-templates  \
 
 export IMAGE_ID=`aws ec2 describe-images \
 --region us-west-1 \
---profile demo \
+#--profile demo \
 --filters "Name=name,Values=yumeng_*" \
 --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
 --output text`
@@ -68,8 +68,8 @@ aws ec2 create-launch-template-version \
   --version-description new_version \
   --source-version 1 \
   --launch-template-data "{\"ImageId\":\"${IMAGE_ID}\"}" \
-  --region us-west-1 \
-  --profile demo
+  --region us-west-1
+#  --profile demo
 
 #aws autoscaling start-instance-refresh \
 #    --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME \
@@ -78,5 +78,5 @@ aws ec2 create-launch-template-version \
 
 aws autoscaling start-instance-refresh \
     --auto-scaling-group-name csye6225-asg-spring2023 \
-    --region us-west-1 \
-    --profile demo
+    --region us-west-1
+#    --profile demo
