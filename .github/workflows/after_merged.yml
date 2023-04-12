@@ -30,4 +30,4 @@ jobs:
 #          packer fmt ./packer && packer init ./packer
 #          packer build ./packer
         run:
-          packer build ./packer
+          packer validate ./packer && packer build ./packer
