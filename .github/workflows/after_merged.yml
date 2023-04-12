@@ -28,11 +28,6 @@ jobs:
           PACKER_LOG: 1
         run:
           packer validate ./packer && packer build ./packer
-
-  aws_launch_template:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -49,5 +44,3 @@ jobs:
           echo $LAUNCH_TEMPLATE_ID
           aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --version-description new_version --source-version 1 --launch-template-data "{\"ImageId\":\"${IMAGE_ID}\"}"
           aws autoscaling start-instance-refresh --auto-scaling-group-name csye6225-asg-spring2023
-        
-
