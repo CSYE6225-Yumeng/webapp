@@ -22,11 +22,11 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 
 # AWS CLI - Create a new Launch Template for the autoscaling group
 
-aws configure set aws_access_key_id ${{ secrets.DEMO_AWS_ACCESS_KEY_ID }} --profile demo
-aws configure set aws_secret_access_key ${{ secrets.DEMO_AWS_SECRET_ACCESS_KEY }} --profile demo
+    aws configure set aws_access_key_id $DEMO_AWS_ACCESS_KEY_ID --profile demo
+aws configure set aws_secret_access_key $DEMO_AWS_SECRET_ACCESS_KEY --profile demo
 aws configure set region us-west-1 --profile demo
-aws configure set aws_access_key_id ${{ secrets.DEV_AWS_ACCESS_KEY_ID }} --profile dev
-aws configure set aws_secret_access_key ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }} --profile dev
+aws configure set aws_access_key_id $DEV_AWS_ACCESS_KEY_ID --profile dev
+aws configure set aws_secret_access_key $DEV_AWS_SECRET_ACCESS_KEY --profile dev
 aws configure set region us-west-1 --profile dev
 
 #export LAUNCH_TEMPLATE_ID=`aws ec2 describe-launch-templates  \
