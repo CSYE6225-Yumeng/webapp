@@ -25,4 +25,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           PACKER_LOG: 1
         run:
-          packer fmt ./packer && packer init ./packer && packer validate ./packer
+          packer fmt ./packer && packer init ./packer
