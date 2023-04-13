@@ -18,9 +18,17 @@ public class HealthzController {
     private static final Logger logger = LoggerFactory.getLogger(HealthzController.class);
     @GetMapping("/healthz")
     public ResponseEntity getHealthz() {
-        statsDClient.incrementCounter("health.get");
+        statsDClient.incrementCounter("healthz.get");
         statsDClient.incrementCounter("all.api.call");
         logger.info("[GET]test healthz successful");
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity getHealth() {
+        statsDClient.incrementCounter("health.get");
+        statsDClient.incrementCounter("all.api.call");
+        logger.info("[GET]test health successful");
         return ResponseEntity.ok().build();
     }
 }
