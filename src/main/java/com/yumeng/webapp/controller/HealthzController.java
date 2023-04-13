@@ -24,11 +24,11 @@ public class HealthzController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/health")
-    public ResponseEntity getHealth() {
-        statsDClient.incrementCounter("health.get");
-        statsDClient.incrementCounter("all.api.call");
-        logger.info("[GET]test health successful");
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/health")
+//    public ResponseEntity getHealth() {
+//        statsDClient.incrementCounter("health.get");
+//        statsDClient.incrementCounter("all.api.call");
+//        logger.info("[GET]test health successful");
+//        return ResponseEntity.ok().build();
+//    }
 }

@@ -49,6 +49,9 @@ run src -> test -> java -> com.yumeng.webapp.controller -> UserControllerTest.ja
 9. `create unique index ix_auth_username on authorities (username,authority);`
 10. run src -> main -> java -> com.yumeng.webapp -> WebappApplication.java
 
-
-
-test
+## The command to import the certificate：
+aws acm import-certificate --certificate fileb://demo_yumenghuang_me.crt \
+--certificate-chain fileb://demo_yumenghuang_me.ca-bundle \
+--private-key fileb://private.key \
+--region us-west-1 \
+--profile demo
