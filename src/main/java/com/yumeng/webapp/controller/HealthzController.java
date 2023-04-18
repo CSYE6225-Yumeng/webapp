@@ -21,7 +21,8 @@ public class HealthzController {
         statsDClient.incrementCounter("healthz.get");
         statsDClient.incrementCounter("all.api.call");
         logger.info("[GET]test healthz successful");
-        return ResponseEntity.ok().build();
+        
+        return ResponseEntity.ok().body("healthz");
     }
 
 //    @GetMapping("/health")
