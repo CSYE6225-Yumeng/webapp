@@ -31,7 +31,7 @@ public class UserController {
 
 
     @PostMapping(
-            value = "/v1/user",
+            value = "/v2/user",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User user) {
