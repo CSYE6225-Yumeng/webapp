@@ -28,7 +28,7 @@ public class SecurityConfiguration{
         logger.info("Set SecurityFilterChain...");
         http.csrf().disable()
               .authorizeHttpRequests()
-              .requestMatchers(HttpMethod.POST,"/v1/user").permitAll()
+              .requestMatchers(HttpMethod.POST,"/v2/user").permitAll()
               .requestMatchers(HttpMethod.GET,"/healthz").permitAll()
 //              .requestMatchers(HttpMethod.GET,"/health").permitAll()
               .requestMatchers(HttpMethod.GET,"/v1/product/**").permitAll()
